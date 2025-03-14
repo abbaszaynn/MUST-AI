@@ -1,1 +1,1 @@
-web: python fastAPI.py
+web: python render_fastapi_app.py
