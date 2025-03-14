@@ -7,7 +7,7 @@ import os
 app = FastAPI()
 
 # Load the trained model and tokenizer
-MODEL_PATH = os.getenv('MODEL_PATH', './model')  # Make sure the model folder is properly uploaded
+MODEL_PATH = os.getenv('MODEL_PATH', './model.SAFETENSORS')  # Make sure the model folder is properly uploaded
 
 try:
     # Load model and tokenizer from local directory
