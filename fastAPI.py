@@ -8,14 +8,13 @@ app = FastAPI()
 # Load the trained model and tokenizer
 MODEL_PATH = "./model.safetensors"
 CONFIG_PATH = "./config.json"
-TOKENIZER_PATH = "./vocab.txt"
-
 
 try:
-    model = AutoModelForSequenceClassification.from_pretrained(CONFIG_PATH)
-    model.load_state_dict(torch.load(MODEL_PATH))
+    # Load model and tokenizer
+    model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased")
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
     model.eval()
-    tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH)
+    tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 except Exception as e:
     raise RuntimeError(f"Failed to load model or tokenizer: {str(e)}")
 
@@ -43,7 +42,7 @@ async def predict(input_data: TextInput):
 def read_root():
     return {"message": "Model API is running!"}
 
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("fastAPI:app", host="0.0.0.0", port=8000)
-
