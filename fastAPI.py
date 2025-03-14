@@ -2,19 +2,18 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
+import os
 
 app = FastAPI()
 
 # Load the trained model and tokenizer
-MODEL_PATH = "./model.safetensors"
-CONFIG_PATH = "./config.json"
+MODEL_PATH = os.getenv('MODEL_PATH', './model')  # Make sure the model folder is properly uploaded
 
 try:
-    # Load model and tokenizer
-    model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased")
-    model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
+    # Load model and tokenizer from local directory
+    model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
     model.eval()
-    tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 except Exception as e:
     raise RuntimeError(f"Failed to load model or tokenizer: {str(e)}")
 
@@ -45,4 +44,4 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("fastAPI:app", host="0.0.0.0", port=8000)
+    uvicorn.run("render_fastapi_app:app", host="0.0.0.0", port=8000)
