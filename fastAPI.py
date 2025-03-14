@@ -7,12 +7,15 @@ import os
 app = FastAPI()
 
 # Load the trained model and tokenizer
-MODEL_PATH = os.getenv('MODEL_PATH', './model.SAFETENSORS')  # Path to your model directory
+MODEL_DIR = os.getenv('MODEL_PATH', './model')  # Folder containing your model files
 
 try:
     # Load model and tokenizer from the folder
-    model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+    model = AutoModelForSequenceClassification.from_pretrained(
+        MODEL_DIR,
+        local_files_only=True
+    )
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
     model.eval()
 except Exception as e:
     raise RuntimeError(f"Failed to load model or tokenizer: {str(e)}")
