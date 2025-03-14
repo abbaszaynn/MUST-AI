@@ -42,3 +42,8 @@ async def predict(input_data: TextInput):
 @app.get("/")
 def read_root():
     return {"message": "Model API is running!"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("fastAPI:app", host="0.0.0.0", port=8000)
+
