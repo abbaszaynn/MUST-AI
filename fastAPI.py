@@ -7,10 +7,10 @@ import os
 app = FastAPI()
 
 # Load the trained model and tokenizer
-MODEL_PATH = os.getenv('MODEL_PATH', './model.SAFETENSORS')  # Make sure the model folder is properly uploaded
+MODEL_PATH = os.getenv('MODEL_PATH', './model.SAFETENSORS')  # Path to your model directory
 
 try:
-    # Load model and tokenizer from local directory
+    # Load model and tokenizer from the folder
     model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH)
     tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
     model.eval()
@@ -28,6 +28,7 @@ async def predict(input_data: TextInput):
         inputs = tokenizer(input_data.text, return_tensors="pt")
         with torch.no_grad():
             outputs = model(**inputs)
+        
         predictions = torch.nn.functional.softmax(outputs.logits, dim=1)
         predicted_label = torch.argmax(predictions, dim=1).item()
         confidence = predictions[0][predicted_label].item()
